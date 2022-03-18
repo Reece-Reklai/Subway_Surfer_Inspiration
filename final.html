@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Babylon Template</title>
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script>
+        var canvas = null;
+        var engine = null;
+        /******* Add the create scene function ******/
+        function createScene() {
+            let scene, camera, light, ocean, sun, newMeshes, direction, platform, rails, tunnel, train1, train2, tree, box, box1, box2, justJump, start, advancedTexture;
+            let leftWall, rightWall, middleWall, doorLeft, doorRight, closeBulb, middleBulb, farBulb, portal, block1, block2, lightbulb1, lightbulb2,lightbulb3;
+            scene = new BABYLON.Scene(engine);
+             // -----------------------------------------------------------------------------------------
+            //Set gravity for the scene (G force like, on Y-axis)
+            scene.gravity = new BABYLON.Vector3(0, -0.9, 0);
+        
+            // Enable Collisions
+            scene.collisionsEnabled = true;
+            // Set Camera
+            function addCamera(){
+                camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(-5, 1, 0), scene);
+                camera.attachControl(canvas, true);
+                camera.minZ = 0.45;
+                camera.speed = 0.2;
+                camera.keysDown.pop();
+                camera.keysUp.pop();
+                camera.keysRight.pop();
+                camera.keysDown.pop();
+                camera.keysLeft.push(65);
+                camera.keysRight.push(68);
+                camera.keysUp.push(87);
+                //Then apply collisions and gravity to the active camera
+                camera.checkCollisions = true;
+                camera.collisionRadius = new BABYLON.Vector3(0.25, 0.25, 0.25);
+                camera.applyGravity = true;
+            
+                //Set the ellipsoid around the camera (e.g. your player's size)
+                camera.ellipsoid = new BABYLON.Vector3(0.5, 0.5, 0.5);
+            }
+            // Camera Jump
+            window.addEventListener("keyup", onKeyUp, false);
+            justJump = false;
+            function onKeyUp(event) {
+                if(event.keyCode == 32 && !justJump){
+                cameraJump();
+                justJump = true;
+                setTimeout(() => justJump = false, 1000)
+                setTimeout(cameraJump(), 1000);
+                }
+            }
+            // Animate Camera Jump
+            var cameraJump = function() {
+                var cam = scene.cameras[0];
+        
+                cam.animations = [];
+                
+                var a = new BABYLON.Animation(
+                    "a",
+                    "position.y", 30,
+                    BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+                    BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+                
+                // Animation keys
+                var keys = [];
+                keys.push({ frame: 0, value: cam.position.y });
+                keys.push({ frame: 10, value: cam.position.y + 1.5 });
+                keys.push({ frame: 20, value: cam.position.y });
+                a.setKeys(keys);
+                
+                var easingFunction = new BABYLON.CircleEase();
+                easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+                a.setEasingFunction(easingFunction);
+                
+                cam.animations.push(a);
+                
+                scene.beginAnimation(cam, 0, 20, false);
+            }
+            // -----------------------------------------------------------------------------------------
+            function addMusic(){
+                var music = new BABYLON.Sound("Music", "ytmp3free.cc_subway-surfers-ost-extended-youtubemp3free.org.mp3", scene, null, {
+                    loop: true,
+                    autoplay: true
+                  });
+            }
+            function addLight(){
+                // Light for Sun
+                light = new BABYLON.PointLight("spot", new BABYLON.Vector3(-5, 10, 0), scene);
+                light.diffuse = new BABYLON.Color3(1, 1, 1);
+                // Light for Bulb
+                lightbulb1 = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(-1, 1, -1), new BABYLON.Vector3(0, -1, 0), Math.PI / 2, 10, scene);
+                lightbulb1.diffuse = new BABYLON.Color3(0.09, 0.51, 0.9);
+                lightbulb2 = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(-1, 1, -1), new BABYLON.Vector3(0, -1, 0), Math.PI / 2, 10, scene);
+                lightbulb2.diffuse = new BABYLON.Color3(0.09, 0.51, 0.9);
+                lightbulb3 = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(-1, 1, -1), new BABYLON.Vector3(0, -1, 0), Math.PI / 2, 10, scene);
+                lightbulb3.diffuse = new BABYLON.Color3(0.09, 0.51, 0.9);
+                // Sun
+                sun = BABYLON.Mesh.CreateSphere("sun", 32, 1.5);
+                var sunMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+                sunMaterial.diffuseTexture = new BABYLON.Texture("images/sunny.jpg", scene);
+                sunMaterial.emissiveTexture = new BABYLON.Texture("images/sunny.jpg", scene);
+                sunMaterial.ambientTexture = new BABYLON.Texture("images/sunny.jpg", scene);
+                sunMaterial.specularTexture = new BABYLON.Texture("images/sunny.jpg", scene);
+                sun.material = sunMaterial;
+                sun.position = light.position;
+                direction = true;
+
+            }
+            function addOcean(){
+                var myOcean = new BABYLON.StandardMaterial("ocean");
+                myOcean.diffuseTexture = new BABYLON.Texture("images/ocean.jpg");
+            
+                const options = {
+                    width: 100,
+                    height: 100,
+                    subdivisions: 250,
+                    maxHeight: 0.6
+                }
+                
+                ocean = BABYLON.MeshBuilder.CreateGroundFromHeightMap("ocean", "images/ocean.jpg", options);
+                ocean.material = myOcean;
+                ocean.position.x = 5;
+                ocean.position.y = -0.5;
+                ocean.position.z = -6;
+                ocean.checkCollisions = true;
+                
+            }
+            function addSky(){
+                skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
+                var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+                skyboxMaterial.backFaceCulling = false;
+                skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("https://playground.babylonjs.com/textures/skybox", scene);
+                skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+                skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+                skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+                skybox.material = skyboxMaterial;
+            }
+
+
+            // The first parameter can be used to specify which mesh to import. Here we import all meshes
+            BABYLON.SceneLoader.ImportMesh("", "./", "finishedProduct.babylon", scene, function (newMeshes) {
+                // block 2 - 0, box 1 - 1, box 2 - 2, portal - 3, platform - 4, rails - 5, train 1 - 6, train 2 - 7, tree - 8, right wall - 9, left wall - 10
+                // door left - 11, door right - 12, middle wall - 13, block 1 - 14, tunnel - 15, close bulb - 16, middle bulb - 17, far bulb - 18
+                for (i in newMeshes) {
+                    if(i != 16 && i != 17 && i != 18 && i != 5 && i != 11 && i != 8){
+                        newMeshes[i].checkCollisions = true;
+                    }
+                  }
+                block2 = newMeshes[0];
+                box1 = newMeshes[1];
+                box2 = newMeshes[2];
+                portal = newMeshes[3];
+                platform = newMeshes[4];
+                rails = newMeshes[5];
+                train1 = newMeshes[6];
+                train2 = newMeshes[7];
+                tree = newMeshes[8];
+                rightWall = newMeshes[9];
+                leftWall = newMeshes[10];
+                doorLeft = newMeshes[11];
+                doorRight = newMeshes[12];
+                middleWall = newMeshes[13];
+                block1 = newMeshes[14];
+                tunnel = newMeshes[15];
+                closeBulb = newMeshes[16];
+                middleBulb = newMeshes[17];
+                farBulb = newMeshes[18];
+                // fix camera lock
+                camera.lockedTarget = portal.position;
+                // fix textures
+                // railroad
+                var myRailRoad = new BABYLON.StandardMaterial("myMaterial", scene);
+                myRailRoad.diffuseTexture = new BABYLON.Texture("images/railroad.jpg", scene);
+                myRailRoad.emissiveTexture = new BABYLON.Texture("images/railroad.jpg", scene);
+                myRailRoad.ambientTexture = new BABYLON.Texture("images/railroad.jpg", scene);
+                myRailRoad.specularTexture = new BABYLON.Texture("images/railroad.jpg", scene);
+                rails.material = myRailRoad;
+                // tunnel
+                var myTunnel = new BABYLON.StandardMaterial("myMaterial", scene);
+                myTunnel.diffuseTexture = new BABYLON.Texture("images/bricks.jpg", scene);
+                myTunnel.emissiveTexture = new BABYLON.Texture("images/bricks.jpg", scene);
+                myTunnel.ambientTexture = new BABYLON.Texture("images/bricks.jpg", scene);
+                myTunnel.specularTexture = new BABYLON.Texture("images/bricks.jpg", scene);
+                tunnel.material = myTunnel;
+                // platform
+                var myPlat = new BABYLON.StandardMaterial("myMaterial", scene);
+                myPlat.diffuseTexture = new BABYLON.Texture("images/floor.jpg", scene);
+                platform.material = myPlat;
+                // box1
+                var myBox1 = new BABYLON.StandardMaterial("myMaterial", scene);
+                myBox1.diffuseTexture = new BABYLON.Texture("images/box.jpg", scene);
+                myBox1.emissiveTexture = new BABYLON.Texture("images/box.jpg", scene);
+                box1.material = myBox1;
+                // box2
+                var myBox2 = new BABYLON.StandardMaterial("myMaterial", scene);
+                myBox2.diffuseTexture = new BABYLON.Texture("images/box2.jpg", scene);
+                myBox2.emissiveTexture = new BABYLON.Texture("images/box2.jpg", scene);
+                box2.material = myBox2;
+                // block1
+                var myBlock1 = new BABYLON.StandardMaterial("myMaterial", scene);
+                myBlock1.diffuseTexture = new BABYLON.Texture("images/block.jpg", scene);
+                myBlock1.emissiveTexture = new BABYLON.Texture("images/block.jpg", scene);
+                block1.material = myBlock1;
+                // block2
+                var myBlock2 = new BABYLON.StandardMaterial("myMaterial", scene);
+                myBlock2.diffuseTexture = new BABYLON.Texture("images/block2.jpg", scene);
+                myBlock2.emissiveTexture = new BABYLON.Texture("images/block2.jpg", scene);
+                block2.material = myBlock2;
+                // tree
+                var myTree = new BABYLON.StandardMaterial("myMaterial", scene);
+                myTree.diffuseTexture = new BABYLON.Texture("images/tree.jpg", scene);
+                myTree.emissiveTexture = new BABYLON.Texture("images/tree.jpg", scene);
+                tree.material = myTree;
+                // hitBox for tree
+                box = BABYLON.MeshBuilder.CreateBox("box", scene);
+                box.position.x = tree.position.x;
+                box.position.y = tree.position.y;
+                box.position.z = tree.position.z;
+                box.isVisible = false;
+                // left and right wall invisible
+                leftWall.isVisible = false;
+                rightWall.isVisible = false;
+                // middle wall
+                var myWall = new BABYLON.StandardMaterial("myMaterial", scene);
+                myWall.diffuseColor = new BABYLON.Color3(0, 1, 0);
+                middleWall.material = myWall;
+                // left door
+                var myLeftDoor = new BABYLON.StandardMaterial("myMaterial", scene);
+                myLeftDoor.diffuseColor = new BABYLON.Color3(1, 0, 0);
+                doorLeft.material = myLeftDoor;
+                // right door
+                var myRightDoor = new BABYLON.StandardMaterial("myMaterial", scene);
+                myRightDoor.diffuseColor = new BABYLON.Color3(0, 0, 1);
+                doorRight.material = myRightDoor;
+                // portal
+                var myPortal = new BABYLON.StandardMaterial("myMaterial", scene);
+                myPortal.diffuseTexture = new BABYLON.Texture("images/portal.jpg", scene);
+                myPortal.emissiveTexture = new BABYLON.Texture("images/portal.jpg", scene);
+                portal.material = myPortal
+                // bulbs
+                var myBulb = new BABYLON.StandardMaterial("myMaterial", scene);
+                myBulb.diffuseTexture = new BABYLON.Texture("images/sunny.jpg", scene);
+                myBulb.emissiveTexture = new BABYLON.Texture("images/sunny.jpg", scene);
+                closeBulb.material = myBulb;
+                middleBulb.material = myBulb;
+                farBulb.material = myBulb;
+                // shadows
+                var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+                shadowGenerator.addShadowCaster(platform);
+                shadowGenerator.addShadowCaster(tunnel);
+                shadowGenerator.addShadowCaster(train1);
+                shadowGenerator.addShadowCaster(train2);
+                shadowGenerator.addShadowCaster(box1);
+                shadowGenerator.addShadowCaster(box2);
+                shadowGenerator.addShadowCaster(block1);
+                shadowGenerator.addShadowCaster(block2);
+                shadowGenerator.addShadowCaster(rails);
+                shadowGenerator.addShadowCaster(middleWall);
+                shadowGenerator.addShadowCaster(doorLeft);
+                shadowGenerator.addShadowCaster(doorRight);
+                shadowGenerator.addShadowCaster(portal);
+                shadowGenerator.addShadowCaster(tree);
+                // lightbulb
+                lightbulb1.position = closeBulb.position;
+                lightbulb2.position = middleBulb.position;
+                lightbulb3.position = farBulb.position;
+                // -----------------------------------------------------------------------------------------
+                // Create a particle system 
+                var particleSystem = new BABYLON.ParticleSystem("particles", 2000);
+                //Texture of each particle
+                particleSystem.particleTexture = new BABYLON.Texture("images/fire.jpg");
+                // Position where the particles are emiited from
+                particleSystem.emitter = tree.position;
+                // Size of each particle (random between...
+                particleSystem.minSize = 0.1;
+                particleSystem.maxSize = 0.10;
+
+                // Life time of each particle (random between...
+                particleSystem.minLifeTime = 0.3;
+                particleSystem.maxLifeTime = 1.5;
+                // Emission rate
+                particleSystem.emitRate = 1000;
+                particleSystem.start();
+                    // Create a particle system
+                var particleSystem2 = new BABYLON.ParticleSystem("particles", 2000, scene);
+
+                    //Texture of each particle
+                    particleSystem2.particleTexture = new BABYLON.Texture("images/light.jpg", scene);
+
+                    // Where the particles come from
+                    particleSystem2.emitter = middleBulb.position; // the starting location
+
+                    // Size of each particle (random between...
+                    particleSystem2.minSize = 0.1;
+                    particleSystem2.maxSize = 0.5;
+
+                    // Life time of each particle (random between...
+                    particleSystem2.minLifeTime = 0.3;
+                    particleSystem2.maxLifeTime = 1.5;
+
+                    // Emission rate
+                    particleSystem2.emitRate = 1000;
+
+
+                    /******* Emission Space ********/
+                    particleSystem2.createSphereEmitter(0.000001);
+
+
+                    // Start the particle system
+                    particleSystem2.start();
+                 // -----------------------------------------------------------------------------------------
+                 // Animate Tree
+                    var frameRate = 10;
+                    //Rotation Animation
+                        var yRot = new BABYLON.Animation("yRot", "rotation.y", frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+        
+                        var keyFramesR = []; 
+        
+                        keyFramesR.push({
+                            frame: 0,
+                            value: 0
+                        });
+        
+                        keyFramesR.push({
+                            frame: frameRate,
+                            value: Math.PI
+                        });
+        
+                        keyFramesR.push({
+                            frame: 2 * frameRate,
+                            value: 2 * Math.PI
+                        });
+        
+        
+                        yRot.setKeys(keyFramesR);
+        
+                        scene.beginDirectAnimation(tree, [ yRot], 0, 2 * frameRate, true);
+                 // -------------------------------------------------------------------------------------------
+                // Game Counter
+                 var counter = 0;
+                 const spriteManagerPlayer = new BABYLON.SpriteManager("walkerManager", "images/numbers.png", 2000, {width:95, height:97});
+                 const number = new BABYLON.Sprite("number", spriteManagerPlayer);
+                 number.position.x = 2;
+                 number.position.y = 3;
+                 number.position.z = -4;
+                 // Camera Collision
+                 camera.onCollide = function(m) {
+                    if(counter == 1){
+                        doorLeft.material = myWall;
+                        doorRight.material = myLeftDoor;
+                        middleWall.material = myRightDoor;
+                    }
+                    if(counter == 3){
+                        doorLeft.material = myLeftDoor;
+                        doorRight.material = myLeftDoor;
+                        middleWall.material = myLeftDoor;
+                    }
+                    if (m == tunnel || m == block1 || m == block2 || m == box1 || m == box2 || m == train1 || m == train2 || m == tree || m == middleWall || m == doorRight || m == ocean){
+                        camera.position.x = -5;
+                        camera.position.y = 1;
+                        camera.position.z = 0;
+                        counter = 0;
+                        number.cellIndex = counter;
+                    }
+                    if(m == portal){
+                        camera.position.x = -5;
+                        camera.position.y = 1;
+                        camera.position.z = 0;
+                        counter = counter + 1;
+                        number.cellIndex = counter; // 0 - 8 are my numbers for sprites
+                    }
+                };
+                // Animate Block 2
+                wallSpeed = 0.01;
+                movingWall = true;
+                        scene.registerBeforeRender(function () {
+                            if(counter == 2){
+                                wallSpeed = 0.02;
+                            }
+                            if(counter == 4){
+                                wallSpeed = 0.03;
+                            }
+                            if (block2.position.z <= 2 && movingWall){
+                                block2.position.z += wallSpeed;
+                            }
+                            else {
+                                movingWall = false;
+                            }
+                            if (block2.position.z >= -2 && !movingWall){
+                                block2.position.z -= wallSpeed;
+                            }
+                            else {
+                                movingWall = true;
+                            }
+
+                          });
+            });
+            //Sun animation
+            scene.onBeforeRenderObservable.add(() => {
+                sun.position = light.position;
+                if (light.position.x <= 50 && direction){
+                    light.position.x += 0.1;
+                }
+                else {
+                    direction = false;
+                }
+                if (light.position.x >= -5 && !direction){
+                    light.position.x -= 0.1;
+                }
+                else {
+                    direction = true;
+                }
+            });
+
+            addCamera();
+            addLight();
+            addSky();
+            addOcean();
+            addMusic();
+            return scene;
+            };
+        /******* End of the create scene function ******/
+        function init() {
+            canvas = document.getElementById("renderCanvas");
+            engine = new BABYLON.Engine(
+                canvas,
+                true,
+                { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }
+            );
+            let scene = createScene();
+            // Register a render loop to repeatedly render the scene
+            engine.runRenderLoop(function () {
+                scene.render();
+            });
+            // Watch for browser/canvas resize events
+            window.addEventListener("resize", function () {
+                engine.resize();
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <canvas id="renderCanvas"></canvas>
+</body>
+
+</html>

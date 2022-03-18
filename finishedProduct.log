@@ -1,0 +1,215 @@
+Exporter version: 2.93.5, Blender version: 3.0.1
+========= Conversion from Blender to Babylon.js =========
+	Scene settings used :
+		Inline textures     :  false
+		Material Type       :  PBR
+		Positions Precision :  4
+		Normals Precision   :  3
+		UVs Precision       :  3
+		Vert Color Precision:  3
+		Mat Weight Precision:  2
+		Keep Z-up r-handed  :  no
+		Texture directory   :  D:\Repo\computer_graphics\HW_importBlend\
+	Python World class constructor completed
+	WARNING: No active camera has been assigned, or is not in a currently enabled collection
+	processing begun of mesh:  Block2
+		WARNING: No materials have been assigned: 
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  12
+	processing begun of mesh:  Box
+		WARNING: No materials have been assigned: 
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  12
+	processing begun of mesh:  Box2
+		WARNING: No materials have been assigned: 
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  12
+	processing begun of mesh:  Cylinder
+		WARNING: No materials have been assigned: 
+		num positions      :  309
+		num normals        :  309
+		num tangents       :  0
+		num uvs            :  618
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  124
+	processing begun of mesh:  Platform
+		WARNING: No materials have been assigned: 
+		num positions      :  4
+		num normals        :  4
+		num tangents       :  0
+		num uvs            :  8
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  2
+	processing begun of mesh:  Railroad
+		WARNING: No materials have been assigned: 
+		num positions      :  44347
+		num normals        :  44347
+		num tangents       :  0
+		num uvs            :  88694
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  20988
+	processing begun of mesh:  Train
+		processing begun of material:  Blue
+		processing begun of material:  Red
+		processing begun of material:  White
+		processing begun of multimaterial:  finishedProduct.Multimaterial#0
+		num positions      :  4330
+		num normals        :  4330
+		num tangents       :  0
+		num uvs            :  8660
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  1816
+	processing begun of mesh:  Train2
+		processing begun of material:  Blue.001
+		processing begun of material:  Red.001
+		processing begun of material:  White.001
+		processing begun of multimaterial:  finishedProduct.Multimaterial#1
+		num positions      :  4330
+		num normals        :  4330
+		num tangents       :  0
+		num uvs            :  8660
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  1816
+	processing begun of mesh:  Tree
+		WARNING: No materials have been assigned: 
+		num positions      :  562588
+		num normals        :  562588
+		num tangents       :  0
+		num uvs            :  0
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  188076
+		WARNING: # of 0 area faces found:  88
+	processing begun of mesh:  Wall_1
+		WARNING: No materials have been assigned: 
+		num positions      :  4
+		num normals        :  4
+		num tangents       :  0
+		num uvs            :  8
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  2
+	processing begun of mesh:  Wall_2
+		WARNING: No materials have been assigned: 
+		num positions      :  4
+		num normals        :  4
+		num tangents       :  0
+		num uvs            :  8
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  2
+	processing begun of mesh:  Door
+		WARNING: No materials have been assigned: 
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  12
+	processing begun of mesh:  Door2
+		WARNING: No materials have been assigned: 
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  12
+	processing begun of mesh:  Wall_3
+		WARNING: No materials have been assigned: 
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  12
+	processing begun of mesh:  Block
+		WARNING: No materials have been assigned: 
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  12
+	processing begun of mesh:  Block.001
+		WARNING: No materials have been assigned: 
+		num positions      :  145
+		num normals        :  145
+		num tangents       :  0
+		num uvs            :  290
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  60
+	processing begun of mesh:  Sphere
+		WARNING: No materials have been assigned: 
+		num positions      :  3918
+		num normals        :  3918
+		num tangents       :  0
+		num uvs            :  7836
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  1466
+	processing begun of mesh:  Sphere.001
+		WARNING: No materials have been assigned: 
+		num positions      :  3918
+		num normals        :  3918
+		num tangents       :  0
+		num uvs            :  7836
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  1466
+	processing begun of mesh:  Sphere.002
+		WARNING: No materials have been assigned: 
+		num positions      :  3918
+		num normals        :  3918
+		num tangents       :  0
+		num uvs            :  7836
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  1466
+========= Writing of JSON file started =========
+	writing mesh:  Block2
+	writing mesh:  Box
+	writing mesh:  Box2
+	writing mesh:  Cylinder
+	writing mesh:  Platform
+	writing mesh:  Railroad
+	writing mesh:  Train
+	writing mesh:  Train2
+	writing mesh:  Tree
+	writing mesh:  Wall_1
+	writing mesh:  Wall_2
+	writing mesh:  Door
+	writing mesh:  Door2
+	writing mesh:  Wall_3
+	writing mesh:  Block
+	writing mesh:  Block.001
+	writing mesh:  Sphere
+	writing mesh:  Sphere.001
+	writing mesh:  Sphere.002
+========= Writing of JSON file completed =========
+========= end of processing =========
+elapsed time:  0 min, 20.8539 secs
