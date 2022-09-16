@@ -355,13 +355,6 @@
         
                         scene.beginDirectAnimation(tree, [ yRot], 0, 2 * frameRate, true);
                  // -------------------------------------------------------------------------------------------
-                // Game Counter
-                 var counter = 0;
-                 const spriteManagerPlayer = new BABYLON.SpriteManager("walkerManager", "images/numbers.png", 2000, {width:95, height:97});
-                 const number = new BABYLON.Sprite("number", spriteManagerPlayer);
-                 number.position.x = 2;
-                 number.position.y = 3;
-                 number.position.z = -4;
                  // Camera Collision
                  camera.onCollide = function(m) {
                     if(counter == 1){
